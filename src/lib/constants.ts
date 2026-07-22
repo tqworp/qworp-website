@@ -5,7 +5,7 @@ export const SITE_DESCRIPTION =
   "QWORP is an institutional-grade quantitative research platform for building, validating and deploying systematic trading strategies through statistics, machine learning and engineering.";
 export const PARENT_COMPANY = "Vyuhas";
 export const PARENT_COMPANY_URL = "https://vyuhas.com";
-export const CONTACT_EMAIL = "hello@qworp.dev";
+export const CONTACT_EMAIL = "contact@vyuhas.com;
 export const SOCIAL_LINKS = {
   github: "https://github.com/vyuhas/qworp",
   linkedin: "https://www.linkedin.com/company/vyuhas",
