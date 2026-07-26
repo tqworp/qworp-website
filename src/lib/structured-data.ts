@@ -17,6 +17,15 @@ export function buildSoftwareApplicationJsonLd() {
     operatingSystem: "Cloud",
     description: SITE_DESCRIPTION,
     url: SITE_URL,
+    countryOfOrigin: "IN",
+    audience: {
+      "@type": "Audience",
+      audienceType: "Retail Traders",
+      geographicArea: {
+        "@type": "Country",
+        name: "India",
+      },
+    },
     creator: {
       "@type": "Organization",
       name: PARENT_COMPANY,
@@ -34,6 +43,7 @@ export function buildOrganizationJsonLd() {
     url: SITE_URL,
     email: CONTACT_EMAIL,
     description: SITE_DESCRIPTION,
+    areaServed: "IN",
     parentOrganization: {
       "@type": "Organization",
       name: PARENT_COMPANY,
@@ -41,14 +51,17 @@ export function buildOrganizationJsonLd() {
     },
     sameAs: [SOCIAL_LINKS.github, SOCIAL_LINKS.linkedin],
     knowsAbout: [
-      "Quantitative Research",
-      "Algorithmic Trading",
+      "Quantitative Trading",
       "Feature Engineering",
-      "Statistical Validation",
-      "Machine Learning",
-      "Portfolio Construction",
-      "Risk Management",
-      "Execution Systems",
+      "Statistical Factor Research",
+      "Volatility Modelling",
+      "Options Greeks",
+      "Open Interest Analysis",
+      "Market Regime Detection",
+      "Walk-Forward Validation",
+      "Portfolio Optimisation",
+      "Systematic Execution",
+      "Risk Modelling",
     ],
   };
 }

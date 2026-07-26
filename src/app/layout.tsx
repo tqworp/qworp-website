@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import {
   SITE_DESCRIPTION,
@@ -17,6 +17,12 @@ const inter = Inter({
   display: "swap",
 });
 
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -27,14 +33,15 @@ export const metadata: Metadata = {
   keywords: [
     "QWORP",
     "Vyuhas",
-    "quantitative research platform",
-    "algorithmic trading",
-    "systematic trading",
-    "feature engineering",
-    "statistical validation",
-    "backtesting",
-    "portfolio construction",
-    "quantitative finance",
+    "quant trading platform India",
+    "retail quant trading",
+    "systematic trading India",
+    "algorithmic trading India",
+    "options analytics",
+    "volatility modelling",
+    "factor research",
+    "backtesting platform",
+    "NSE BSE algo trading",
   ],
   authors: [{ name: SITE_NAME }],
   creator: SITE_NAME,
@@ -48,7 +55,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
-    locale: "en_US",
+    locale: "en_IN",
   },
   twitter: {
     card: "summary_large_image",
@@ -83,7 +90,11 @@ export default function RootLayout({
   const jsonLd = [buildSoftwareApplicationJsonLd(), buildOrganizationJsonLd()];
 
   return (
-    <html lang="en" className={`${inter.variable} dark h-full`} data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      className={`${inter.variable} ${geistMono.variable} dark h-full`}
+      data-scroll-behavior="smooth"
+    >
       <head>
         <script
           type="application/ld+json"
