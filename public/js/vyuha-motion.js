@@ -32,8 +32,6 @@ const TOKENS = `
     --vy-loop-fast: 2s;
     --vy-loop-medium: 5s;
     --vy-loop-slow: 8s;
-    --vy-loop-orbit: 26s;
-    --vy-loop-orbit-fast: 18s;
     --vy-loop-ticker: 24s;
     display: block;
     color: var(--vy-text);
@@ -287,8 +285,14 @@ class QworpEngine extends MotionElement {
         .node .inner { fill:none; stroke:#d4bdff; stroke-opacity:.14; }
         .node text { fill:#f2eff8; font:500 18px Inter, sans-serif; text-anchor:middle; }
         .node .icon { fill:none; stroke:#b780ff; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
-        .core-spin { transform-origin:500px 325px; animation:spin var(--vy-loop-orbit) linear infinite; }
-        .core-spin-reverse { transform-origin:500px 325px; animation:spinReverse var(--vy-loop-orbit-fast) linear infinite; }
+        /* core-spin/core-spin-reverse used to rotate these two ring groups
+           (spin 26s / spinReverse -18s, both infinite) — replaced with the
+           same coreBreath pulse already applied to .core-breathe below, per
+           brief §2.5: no rotating motion outside Etymology, not even a
+           "diegetic" one on a machine-like element. Deliberate, not an
+           oversight — see vyuha-website-revamp-brief.md §2.5. */
+        .core-spin { transform-origin:500px 325px; animation:coreBreath var(--vy-loop-medium) ease-in-out infinite; }
+        .core-spin-reverse { transform-origin:500px 325px; animation:coreBreath var(--vy-loop-medium) ease-in-out infinite; }
         .core-breathe { transform-origin:500px 325px; animation:coreBreath var(--vy-loop-medium) ease-in-out infinite; }
         .core-label { text-anchor:middle; fill:#fff; font-family:Manrope, Inter, sans-serif; }
         .core-label.q { font-size:80px; font-weight:700; fill:url(#qe-text); }
@@ -296,8 +300,6 @@ class QworpEngine extends MotionElement {
         @keyframes flow { to{stroke-dashoffset:-52} }
         @keyframes nodePulse { 0%,100%{opacity:.78;filter:drop-shadow(0 0 0 rgba(157,103,255,0))} 50%{opacity:1;filter:drop-shadow(0 0 10px rgba(157,103,255,.35))} }
         @keyframes coreBreath { 50%{transform:scale(1.025);filter:drop-shadow(0 0 24px rgba(166,105,255,.55))} }
-        @keyframes spin { to{transform:rotate(360deg)} }
-        @keyframes spinReverse { to{transform:rotate(-360deg)} }
         @media (max-width:760px){ .frame{min-height:440px;aspect-ratio:auto}.top{top:18px}.wordmark{font-size:.86rem}.node text{font-size:15px} }
       </style>
       <section class="frame" role="img" aria-label="QWORP engine with six connected pillars">
