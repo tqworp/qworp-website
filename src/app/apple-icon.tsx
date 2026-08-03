@@ -3,6 +3,8 @@ import { ImageResponse } from "next/og";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
+// Same mark/geometry as src/app/icon.svg, scaled up for the iOS home-screen
+// icon — see qworp-vyuha-redesign.html's favicon <link> for the source shape.
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -13,21 +15,23 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#050816",
+          background: "#070612",
         }}
       >
-        <svg width="120" height="120" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="16" r="12" stroke="#838DA2" strokeOpacity={0.5} />
-          <rect
-            x="16"
-            y="7"
-            width="12.73"
-            height="12.73"
-            stroke="#B4BCCC"
-            strokeOpacity={0.7}
-            transform="rotate(45 16 16)"
-          />
-          <circle cx="16" cy="16" r="2.6" fill="#3B6CF6" />
+        <svg width="132" height="132" viewBox="0 0 48 48">
+          <defs>
+            <linearGradient id="mark-g-apple" x1="4" y1="4" x2="44" y2="44">
+              <stop stopColor="#e0cfff" />
+              <stop offset="0.5" stopColor="#9d67ff" />
+              <stop offset="1" stopColor="#f2a4bc" />
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#mark-g-apple)" strokeWidth="1.9" opacity="0.95">
+            <ellipse cx="24" cy="24" rx="17" ry="12" transform="rotate(18 24 24)" />
+            <ellipse cx="24" cy="24" rx="17" ry="12" transform="rotate(62 24 24)" />
+            <ellipse cx="24" cy="24" rx="17" ry="12" transform="rotate(106 24 24)" />
+            <ellipse cx="24" cy="24" rx="17" ry="12" transform="rotate(150 24 24)" />
+          </g>
         </svg>
       </div>
     ),

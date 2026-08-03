@@ -1,29 +1,32 @@
+import { ContactSection } from "@/components/sections/contact-section";
+import { EngineSection } from "@/components/sections/engine-section";
+import { EtymologySection } from "@/components/sections/etymology-section";
 import { HeroSection } from "@/components/sections/hero-section";
-import { WhySection } from "@/components/sections/why-section";
-import { ResearchPipelineSection } from "@/components/sections/research-pipeline-section";
-import { CoreResearchAreasSection } from "@/components/sections/core-research-areas-section";
-import { QuantMechanismsSection } from "@/components/sections/quant-mechanisms-section";
+import { MechanismsSection } from "@/components/sections/mechanisms-section";
+import { PipelineSection } from "@/components/sections/pipeline-section";
+import { ResearchSection } from "@/components/sections/research-section";
+import { TerminalSection } from "@/components/sections/terminal-section";
 import { VisionSection } from "@/components/sections/vision-section";
+import { WhyQuantSection } from "@/components/sections/why-quant-section";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
-// Technology and Roadmap were removed from the live MVP experience during
-// the visual-first redesign (2026) — the brief asks for a tighter,
-// visually-driven page (Hero, Why, Pipeline, Research Areas, Mechanisms,
-// Vision, Footer only). Both components are intentionally left in place,
-// unmodified, for future re-introduction rather than deleted:
-//   import { TechnologySection } from "@/components/sections/technology-section";
-//   import { RoadmapSection } from "@/components/sections/roadmap-section";
-
+// Section order matches qworp-vyuha-redesign.html's <main> exactly —
+// see vyuha-website-revamp-brief.md §1's table. Header/footer/skip-link
+// live in layout.tsx, not here.
 export default function Home() {
   return (
     <>
       <HeroSection />
-      <WhySection />
-      <ResearchPipelineSection />
-      <CoreResearchAreasSection />
-      <QuantMechanismsSection />
-      {/* <TechnologySection /> — disabled, see note above */}
-      {/* <RoadmapSection /> — disabled, see note above */}
+      <EtymologySection />
+      <WhyQuantSection />
+      <PipelineSection />
+      <TerminalSection />
+      <EngineSection />
+      <ResearchSection />
+      <MechanismsSection />
       <VisionSection />
+      <ContactSection />
+      <ScrollReveal />
     </>
   );
 }

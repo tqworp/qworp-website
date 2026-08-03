@@ -1,135 +1,1054 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+/* Ported from qworp-vyuha-redesign.html's inline <style> block (the source
+   of truth — check there before changing a value here). Font `<link>`/
+   `@import` are gone: next/font self-hosts Manrope/Inter/IBM Plex Mono/
+   Fraunces at build time instead (see layout.tsx), which is the same
+   "self-host fonts to remove the render-blocking Google Fonts request"
+   production task the brief calls out in §5.3, just satisfied via the
+   framework instead of manual font files. --font-* tokens below point at
+   the CSS variables next/font generates rather than literal family names,
+   but resolve to the exact same fallback chains as the source file.
 
-@custom-variant dark (&:is(.dark *));
+   No Tailwind here (the pristine scaffold's `@import "tailwindcss"` is
+   deliberately dropped, along with the tailwindcss/postcss deps in
+   package.json) — the redesign uses zero utility classes, it's entirely
+   hand-authored CSS, so keeping the framework wired in would just be an
+   unused dependency. */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-bg-secondary: var(--bg-secondary);
-  --color-surface: var(--surface);
-  --color-surface-elevated: var(--surface-elevated);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-  --color-divider: var(--divider);
-  --color-indigo: var(--indigo);
-  --color-success: var(--success);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-inter);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+:root {
+  --void: #070612;
+  --panel: #0d0a20;
+  --panel-2: #14102a;
+  --line: rgba(187, 152, 255, 0.12);
+  --line-strong: rgba(196, 164, 255, 0.24);
+  --ink: #f7f5fb;
+  --ink-dim: #aaa4ba;
+  --ink-faint: #6f6a80;
+  --purple: #aa78ff;
+  --green: #62cfa0;
+  --purple-soft: rgba(170, 120, 255, 0.14);
+  --purple-line: rgba(170, 120, 255, 0.4);
+  --purple-bright: #d6c0ff;
+  --purple-bright-soft: rgba(214, 192, 255, 0.12);
+  --red: #de6878;
+  --font-display: var(--font-manrope), var(--font-inter), sans-serif;
+  --font-meaning: var(--font-fraunces), serif;
+  --font-body: var(--font-inter), -apple-system, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), monospace;
+  --container: 1180px;
+  --pad: clamp(1.25rem, 4vw, 3rem);
+  --section-pad: clamp(4.5rem, 9vw, 8.5rem);
 }
 
-/* QWORP is dark-only: :root and .dark share one palette so there is no light flash. */
-:root,
-.dark {
-  --background: #050816;
-  --bg-secondary: #0d1326;
-  --surface: #0d1326;
-  --surface-elevated: #151c2f;
-  --foreground: #ffffff;
-  --text-secondary: #b4bccc;
-  --text-muted: #838da2;
-  --border: rgba(255, 255, 255, 0.08);
-  --divider: rgba(255, 255, 255, 0.05);
-  --primary: #3b6cf6;
-  --primary-foreground: #ffffff;
-  --indigo: #6366f1;
-  --success: #22c55e;
-  --card: rgba(255, 255, 255, 0.03);
-  --card-foreground: #ffffff;
-  --popover: #0d1326;
-  --popover-foreground: #ffffff;
-  --secondary: rgba(255, 255, 255, 0.04);
-  --secondary-foreground: #ffffff;
-  --muted: rgba(255, 255, 255, 0.04);
-  --muted-foreground: #838da2;
-  --accent: rgba(99, 102, 241, 0.12);
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #3b6cf6;
-  --radius: 0.625rem;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@layer base {
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(170, 120, 255, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(110, 61, 232, 0.06), transparent);
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+}
+
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+section {
+  padding-block: var(--section-pad);
+  position: relative;
+}
+
+::selection {
+  background: var(--purple);
+  color: var(--void);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-style: normal;
+}
+
+.meaning h2 {
+  font-family: var(--font-meaning);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.accent {
+  color: var(--purple);
+  font-style: normal;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 1.1rem;
+}
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: var(--purple-line);
+}
+
+.section-head {
+  max-width: 640px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+.section-head .eyebrow {
+  justify-content: center;
+}
+.section-head h2 {
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+}
+.section-head p {
+  color: var(--ink-dim);
+  margin: 1rem auto 0;
+  font-size: 1.05rem;
+  max-width: 520px;
+}
+
+/* buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.5rem;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--purple);
+  color: var(--void);
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: var(--purple-bright);
+  transform: translateY(-1px);
+}
+.btn-outline {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.btn-outline:hover {
+  border-color: var(--purple-line);
+  color: var(--purple);
+}
+.btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============ NAV ============ */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(11, 13, 16, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1.05rem;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.brand-mark {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand-text .name {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+nav.links {
+  display: flex;
+  gap: 2.1rem;
+  align-items: center;
+}
+nav.links a {
+  font-size: 0.87rem;
+  color: var(--ink-dim);
+  transition: color 0.2s;
+  position: relative;
+}
+nav.links a:hover {
+  color: var(--ink);
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.icon-link {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink-dim);
+  transition: all 0.2s;
+}
+.icon-link:hover {
+  color: var(--purple);
+  border-color: var(--purple-line);
+}
+.icon-link svg {
+  width: 16px;
+  height: 16px;
+}
+.burger {
+  display: none;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+.burger svg {
+  width: 18px;
+  height: 18px;
+}
+.mobile-panel {
+  display: none;
+  position: fixed;
+  inset: 0 0 0 0;
+  top: 64px;
+  background: var(--void);
+  z-index: 99;
+  padding: 2rem var(--pad);
+  flex-direction: column;
+  gap: 1.6rem;
+}
+.mobile-panel.open {
+  display: flex;
+}
+.mobile-panel a {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+}
+
+/* ============ HERO ============ */
+.hero {
+  padding-top: 76px;
+  padding-bottom: 0;
+}
+.candle-up {
+  fill: var(--green);
+  opacity: 0.3;
+}
+.candle-down {
+  fill: var(--red);
+  opacity: 0.3;
+}
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-block: 2.75rem;
+}
+
+/* ============ EMBEDDED MOTION COMPONENTS ============ */
+/* min-height/aspect-ratio below match each component's own internal
+   `.frame` sizing exactly (see vyuha-motion.js) so the reserved space is
+   the space it'll actually use — these are plain unknown elements (zero
+   intrinsic size) until public/js/vyuha-motion.js loads and upgrades
+   them; without a reserved size here, each one collapses to ~0px then
+   jumps to full height once its Shadow DOM renders (measured via
+   Lighthouse on the production build: CLS 0.905 before this rule,
+   caused almost entirely by these three elements — keep this in sync
+   with vyuha-motion.js or that regresses). Only qworp-engine and
+   vyuha-market-signal get the bordered-card chrome — vyuha-hero is
+   full-bleed, no border/radius, per the source file's host rule split. */
+vyuha-hero,
+qworp-engine,
+vyuha-market-signal {
+  display: block;
+  width: 100%;
+}
+qworp-engine,
+vyuha-market-signal {
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+}
+vyuha-hero {
+  min-height: min(900px, 92vh);
+}
+qworp-engine {
+  aspect-ratio: 8 / 5;
+  min-height: 470px;
+}
+vyuha-market-signal {
+  min-height: 660px;
+}
+
+/* ticker */
+.ticker-wrap {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  padding-block: 0.9rem;
+  background: rgba(11, 13, 16, 0.55);
+  backdrop-filter: blur(4px);
+}
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+.ticker-track span {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  padding-inline: 1.6rem;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.ticker-track span::after {
+  content: "◆";
+  color: var(--purple-line);
+  font-size: 0.6rem;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ============ REVEAL ============ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+[data-reveal].in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+[data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+[data-reveal-stagger].in-view > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+[data-reveal-stagger].in-view > *:nth-child(1) {
+  transition-delay: 0.02s;
+}
+[data-reveal-stagger].in-view > *:nth-child(2) {
+  transition-delay: 0.08s;
+}
+[data-reveal-stagger].in-view > *:nth-child(3) {
+  transition-delay: 0.14s;
+}
+[data-reveal-stagger].in-view > *:nth-child(4) {
+  transition-delay: 0.2s;
+}
+[data-reveal-stagger].in-view > *:nth-child(5) {
+  transition-delay: 0.26s;
+}
+[data-reveal-stagger].in-view > *:nth-child(6) {
+  transition-delay: 0.32s;
+}
+[data-reveal-stagger].in-view > *:nth-child(7) {
+  transition-delay: 0.38s;
+}
+[data-reveal-stagger].in-view > *:nth-child(8) {
+  transition-delay: 0.44s;
+}
+
+/* ============ ETYMOLOGY (Meaning of Vyuha) ============ */
+.meaning {
+  background: linear-gradient(180deg, transparent, var(--panel) 4%, var(--panel) 96%, transparent);
+}
+.meaning-inner {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 4rem;
+  align-items: center;
+}
+.meaning h2 {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  margin-bottom: 1.5rem;
+}
+.meaning .sanskrit {
+  color: var(--purple);
+}
+.meaning p {
+  color: var(--ink-dim);
+  font-size: 1.05rem;
+  margin-bottom: 1.1rem;
+  max-width: 520px;
+}
+.meaning p:last-of-type {
+  color: var(--ink);
+}
+.spiral-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+.spiral-wrap svg {
+  width: 100%;
+  height: 100%;
+}
+.spiral-ring {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-dasharray: 3 5;
+}
+.spiral-path {
+  fill: none;
+  stroke: var(--purple);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.spiral-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  fill: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* ============ WHY QUANT ============ */
+.compare-block {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+}
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.3rem;
+  width: fit-content;
+  margin: 0 auto 2.5rem;
+}
+.toggle-btn {
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  transition: all 0.25s;
+}
+.toggle-btn.active {
+  background: var(--purple);
+  color: var(--void);
+  font-weight: 600;
+}
+.toggle-btn[data-state-btn="systematic"].active {
+  background: var(--green);
+  color: var(--void);
+}
+.toggle-btn[data-state-btn="discretionary"].active {
+  background: var(--red);
+  color: var(--void);
+}
+.compare-visual {
+  position: relative;
+  height: 260px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1.8rem;
+}
+.compare-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.compare-panel svg {
+  width: 100%;
+  height: 100%;
+}
+[data-state="systematic"] .panel-discretionary {
+  opacity: 0;
+  transform: scale(0.97);
+  pointer-events: none;
+}
+[data-state="systematic"] .panel-systematic {
+  opacity: 1;
+  transform: scale(1);
+}
+[data-state="discretionary"] .panel-systematic {
+  opacity: 0;
+  transform: scale(0.97);
+  pointer-events: none;
+}
+[data-state="discretionary"] .panel-discretionary {
+  opacity: 1;
+  transform: scale(1);
+}
+.chart-grid-sm line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.chaos-line {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.panel-discretionary svg {
+  animation: jitter 0.5s steps(2) infinite;
+}
+@keyframes jitter {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(1px, -1px);
+  }
+  50% {
+    transform: translate(-1px, 1px);
+  }
+  75% {
+    transform: translate(1px, 1px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+.systematic-line {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sys-node {
+  fill: var(--green);
+}
+.compare-caption {
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+  max-width: 480px;
+  min-height: 2.4em;
+  margin-inline: auto;
+}
+.compare-caption strong {
+  color: var(--ink);
+}
+
+/* ============ PIPELINE ============ */
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+.pipeline-wheel-wrap {
+  position: sticky;
+  top: 110px;
+  width: 100%;
+}
+.stage-readout {
+  margin-bottom: 1.8rem;
+}
+.stage-readout-num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.35rem;
+}
+.stage-readout-label {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: color 0.3s;
+}
+.stepper-svg {
+  width: 100%;
+  height: 420px;
+  overflow: visible;
+}
+.stepper-bg {
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  stroke-dasharray: 2 6;
+  animation: dashflow2 4s linear infinite;
+}
+.stepper-fill {
+  stroke: var(--purple);
+  stroke-width: 2;
+  transition: y2 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes dashflow2 {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+.stepper-node circle {
+  fill: var(--void);
+  stroke: var(--line-strong);
+  stroke-width: 1.6;
+  transition: fill 0.4s, stroke 0.4s;
+}
+.stepper-node text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--ink-faint);
+  transition: fill 0.4s;
+}
+.stepper-node.active circle {
+  fill: var(--purple);
+  stroke: var(--purple);
+}
+.stepper-node.active text {
+  fill: var(--purple);
+}
+.stage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.stage-card {
+  padding-block: 2.4rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 1.5rem;
+  transition: opacity 0.4s;
+}
+.stage-card:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.stage-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  flex-shrink: 0;
+  width: 2.4rem;
+  padding-top: 0.2rem;
+  transition: color 0.4s;
+}
+.stage-card.stage-active .stage-num {
+  color: var(--purple);
+}
+.stage-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  color: var(--ink-faint);
+  transition: color 0.4s;
+}
+.stage-card.stage-active .stage-icon {
+  color: var(--purple);
+}
+.stage-body h3 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.stage-body p {
+  color: var(--ink-dim);
+  font-size: 0.98rem;
+  max-width: 440px;
+}
+
+/* ============ RESEARCH GRID ============ */
+.research-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.research-card {
+  background: var(--void);
+  padding: 2.1rem 1.7rem;
+  transition: background 0.3s;
+}
+.research-card:hover {
+  background: var(--panel);
+}
+.research-card .ri {
+  width: 32px;
+  height: 32px;
+  color: var(--purple);
+  margin-bottom: 1.3rem;
+}
+.research-card h3 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.02rem;
+  margin-bottom: 0.6rem;
+}
+.research-card p {
+  color: var(--ink-dim);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* ============ MECHANISMS ============ */
+.mech-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 2.8rem;
+}
+.mech-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+.mech-group-head .roman {
+  font-family: var(--font-mono);
+  color: var(--purple);
+  font-size: 0.85rem;
+}
+.mech-group-head h3 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.mech-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.4rem;
+}
+.mech-item {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.mech-item:hover {
+  border-color: var(--purple-line);
+  background: var(--panel);
+}
+.mech-item .mi {
+  width: 22px;
+  height: 22px;
+  color: var(--purple-bright);
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.mech-item h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+.mech-item p {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
+/* ============ VISION ============ */
+.vision {
+  text-align: center;
+  padding-block: 6rem;
+  overflow: hidden;
+}
+.vision-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.16;
+  pointer-events: none;
+}
+.pulse-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 16s linear infinite;
+}
+.pulse-svg {
+  width: 800px;
+  height: 130px;
+  flex-shrink: 0;
+}
+.pulse-svg path {
+  fill: none;
+  stroke: var(--purple-bright);
+  stroke-width: 1.5;
+}
+.vision blockquote {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.6vw, 2.7rem);
+  max-width: 840px;
+  margin-inline: auto;
+  line-height: 1.32;
+  position: relative;
+  z-index: 2;
+}
+.vision cite {
+  display: block;
+  margin-top: 1.6rem;
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--purple);
+  text-transform: uppercase;
+}
+
+/* ============ CONTACT ============ */
+.contact-box {
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: clamp(2.2rem, 5vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.8rem;
+  background: radial-gradient(circle at 50% 0%, var(--purple-soft), transparent 60%);
+}
+.contact-box h2 {
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  max-width: 520px;
+  margin: 0 auto 1rem;
+}
+.contact-box p {
+  color: var(--ink-dim);
+  max-width: 440px;
+  margin-inline: auto;
+}
+.contact-links {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  border-top: 1px solid var(--line);
+  padding-block: 3rem;
+}
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.footer-left p {
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+  max-width: 380px;
+}
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+
+/* ============ SKIP LINK ============ */
+/* Not in the source file — added per brief §8 ("still to do: add a
+   skip-to-content link"). Styled to match this page's own idiom (mono
+   label, purple accent, sharp corners) rather than a generic focus box. */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: var(--pad);
+  z-index: 200;
+  background: var(--purple);
+  color: var(--void);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  border-radius: 2px;
+  transition: top 0.2s ease;
+}
+.skip-link:focus-visible {
+  top: 1rem;
+}
+
+/* ============ FOCUS STATES ============ */
+/* Not in the source file — added per brief §8 ("the prototype relies on
+   browser defaults, which are weak on a dark background"). */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px) {
+  nav.links {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+  .meaning-inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .spiral-wrap {
+    max-width: 340px;
+    margin-inline: auto;
+  }
+  .pipeline-grid {
+    grid-template-columns: 1fr;
+  }
+  .pipeline-wheel-wrap {
+    position: relative;
+    top: 0;
+    max-width: 320px;
+    margin: 0 auto 1rem;
+  }
+  .stepper-svg {
+    height: 200px;
+  }
+  .research-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mech-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .research-grid {
+    grid-template-columns: 1fr;
+  }
+  .mech-row {
+    grid-template-columns: 1fr;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .hero-ctas .btn {
+    justify-content: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
   * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
-}
-
-@layer utilities {
-  /* Faint coordinate-grid backdrop — the mathematical-canvas motif used behind hero/architecture content. */
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-
-  .bg-radial-fade {
-    background-image: radial-gradient(
-      ellipse 70% 60% at 50% 0%,
-      rgba(59, 108, 246, 0.14),
-      transparent 65%
-    );
-  }
-
-  /* Concentric-ring motif referencing mandala symmetry, kept abstract and mathematical. */
-  .bg-mandala {
-    background-image:
-      radial-gradient(circle at 50% 50%, transparent 0 119px, rgba(255, 255, 255, 0.045) 120px, rgba(255, 255, 255, 0.045) 121px, transparent 122px),
-      radial-gradient(circle at 50% 50%, transparent 0 199px, rgba(255, 255, 255, 0.03) 200px, rgba(255, 255, 255, 0.03) 201px, transparent 202px),
-      radial-gradient(circle at 50% 50%, transparent 0 279px, rgba(255, 255, 255, 0.02) 280px, rgba(255, 255, 255, 0.02) 281px, transparent 282px);
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .focus-ring {
-    @apply outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
