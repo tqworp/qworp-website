@@ -183,6 +183,20 @@ class VyuhaHero extends MotionElement {
       <style>
         ${TOKENS}
         .frame { min-height: min(900px, 92vh); border-radius: inherit; background: transparent; }
+        /* Not in the source file — added after removing Hero's .container
+           wrapper made it full-bleed. At very wide viewports, object-
+           position:74% 42% keeps the same anchor point but the fixed
+           900px cap means object-fit:cover reveals more of the image's
+           own emptier region to the right, reading as sparse. Letting
+           .frame grow taller (bounded by 92vh so it never fills the
+           screen) shows more of the image vertically instead, which is
+           the fix — not touching object-position, which only changes
+           *which* part shows, not how much of it does. 52vw is a
+           starting point from visual iteration, not a derived constant;
+           adjust if a wider viewport still reads sparse. */
+        @media (min-width: 1700px) {
+          .frame { min-height: min(92vh, 52vw); }
+        }
         .art { position: absolute; inset: 0; z-index: 0; opacity: .68;
           -webkit-mask-image: linear-gradient(100deg, transparent 0%, transparent 6%, black 42%, black 100%);
           mask-image: linear-gradient(100deg, transparent 0%, transparent 6%, black 42%, black 100%);
