@@ -182,10 +182,13 @@ class VyuhaHero extends MotionElement {
     this.shadowRoot.innerHTML = `
       <style>
         ${TOKENS}
-        .frame { min-height: min(900px, 92vh); border-radius: inherit; }
+        .frame { min-height: min(900px, 92vh); border-radius: inherit; background: transparent; }
         .art { position: absolute; inset: 0; z-index: 0; opacity: .68;
           -webkit-mask-image: linear-gradient(100deg, transparent 0%, transparent 6%, black 42%, black 100%);
           mask-image: linear-gradient(100deg, transparent 0%, transparent 6%, black 42%, black 100%);
+        }
+        .art::after { content:""; position:absolute; inset:0; pointer-events:none;
+          background: linear-gradient(to bottom, var(--vy-bg) 0%, transparent 14%, transparent 86%, var(--vy-bg) 100%);
         }
         .art img { width: 100%; height: 100%; object-fit: cover; object-position: 74% 42%; display: block; }
         .shell { position: relative; z-index: 2; min-height: inherit; padding: clamp(28px, 4.5vw, 72px); display: flex; flex-direction: column; }
@@ -227,6 +230,7 @@ class VyuhaHero extends MotionElement {
         }
       </style>
       <section class="frame" role="img" aria-label="VYUHA institutional AI quant engine hero">
+        <div class="orb"></div>
         <div class="art" aria-hidden="true">
           <img
             src="/images/hero-ribbon.webp"
@@ -277,7 +281,6 @@ class QworpEngine extends MotionElement {
       <style>
         ${TOKENS}
         .frame { aspect-ratio: 8 / 5; min-height: 470px; border-radius: inherit; }
-        .top { position:absolute; z-index:3; top:clamp(20px,4vw,42px); left:50%; transform:translateX(-50%); }
         svg.diagram { position:absolute; inset:0; width:100%; height:100%; z-index:2; }
         .link { fill:none; stroke:#aa7cff; stroke-opacity:.5; stroke-width:1.5; stroke-dasharray:5 8; animation:flow var(--vy-loop-medium) linear infinite; }
         .node { transform-box:fill-box; transform-origin:center; animation:nodePulse var(--vy-loop-medium) ease-in-out infinite; }
@@ -285,14 +288,15 @@ class QworpEngine extends MotionElement {
         .node .inner { fill:none; stroke:#d4bdff; stroke-opacity:.14; }
         .node text { fill:#f2eff8; font:500 18px Inter, sans-serif; text-anchor:middle; }
         .node .icon { fill:none; stroke:#b780ff; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
-        /* core-spin/core-spin-reverse used to rotate these two ring groups
-           (spin 26s / spinReverse -18s, both infinite) — replaced with the
-           same coreBreath pulse already applied to .core-breathe below, per
-           brief §2.5: no rotating motion outside Etymology, not even a
-           "diegetic" one on a machine-like element. Deliberate, not an
-           oversight — see vyuha-website-revamp-brief.md §2.5. */
-        .core-spin { transform-origin:500px 325px; animation:coreBreath var(--vy-loop-medium) ease-in-out infinite; }
-        .core-spin-reverse { transform-origin:500px 325px; animation:coreBreath var(--vy-loop-medium) ease-in-out infinite; }
+        /* core-ring-outer/core-ring-inner previously rotated independently
+           (spin 26s / spinReverse -18s, both infinite, renamed from
+           core-spin/core-spin-reverse) — now static, no animation property
+           at all. The outer .core-breathe group's scale pulse is the only
+           motion the assembly has. Per brief §2.5: no rotating motion
+           outside Etymology, not even a "diegetic" one on a machine-like
+           element. See vyuha-website-revamp-brief.md §2.5. */
+        .core-ring-outer { transform-origin:500px 325px; }
+        .core-ring-inner { transform-origin:500px 325px; }
         .core-breathe { transform-origin:500px 325px; animation:coreBreath var(--vy-loop-medium) ease-in-out infinite; }
         .core-label { text-anchor:middle; fill:#fff; font-family:Manrope, Inter, sans-serif; }
         .core-label.q { font-size:80px; font-weight:700; fill:url(#qe-text); }
@@ -300,10 +304,9 @@ class QworpEngine extends MotionElement {
         @keyframes flow { to{stroke-dashoffset:-52} }
         @keyframes nodePulse { 0%,100%{opacity:.78;filter:drop-shadow(0 0 0 rgba(157,103,255,0))} 50%{opacity:1;filter:drop-shadow(0 0 10px rgba(157,103,255,.35))} }
         @keyframes coreBreath { 50%{transform:scale(1.025);filter:drop-shadow(0 0 24px rgba(166,105,255,.55))} }
-        @media (max-width:760px){ .frame{min-height:440px;aspect-ratio:auto}.top{top:18px}.wordmark{font-size:.86rem}.node text{font-size:15px} }
+        @media (max-width:760px){ .frame{min-height:440px;aspect-ratio:auto}.node text{font-size:15px} }
       </style>
       <section class="frame" role="img" aria-label="QWORP engine with six connected pillars">
-        <div class="top"><div class="wordmark">${MARK}<span>VYUHA</span></div></div>
         <svg class="diagram" viewBox="0 0 1000 625" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           <defs>
             <radialGradient id="qe-core"><stop stop-color="#efe8ff"/><stop offset=".2" stop-color="#b47bff"/><stop offset=".55" stop-color="#6134c4"/><stop offset="1" stop-color="#0a0718"/></radialGradient>
@@ -317,11 +320,11 @@ class QworpEngine extends MotionElement {
           <g class="core-breathe">
             <polygon points="500,180 620,250 620,400 500,470 380,400 380,250" fill="rgba(10,8,25,.94)" stroke="url(#qe-metal)" stroke-width="3"/>
             <circle cx="500" cy="325" r="124" fill="none" stroke="#a875ff" stroke-opacity=".18" stroke-width="16"/>
-            <g class="core-spin">
+            <g class="core-ring-outer">
               <circle cx="500" cy="325" r="114" fill="none" stroke="url(#qe-metal)" stroke-width="3" stroke-dasharray="2 12 34 8"/>
               ${Array.from({length:24},(_,i)=>`<line x1="500" y1="203" x2="500" y2="217" stroke="#b888ff" stroke-opacity="${i%3===0?.8:.28}" transform="rotate(${i*15} 500 325)"/>`).join('')}
             </g>
-            <g class="core-spin-reverse">
+            <g class="core-ring-inner">
               <circle cx="500" cy="325" r="91" fill="none" stroke="#dfc8ff" stroke-opacity=".45" stroke-width="2" stroke-dasharray="44 9 7 12"/>
               <circle cx="500" cy="325" r="78" fill="none" stroke="#d59d7f" stroke-opacity=".32" stroke-width="1.5" stroke-dasharray="5 8"/>
             </g>
@@ -367,9 +370,8 @@ class VyuhaMarketSignal extends MotionElement {
     this.shadowRoot.innerHTML = `
       <style>
         ${TOKENS}
-        .frame { aspect-ratio:8/5; min-height:520px; border-radius:inherit; padding:clamp(24px,3.7vw,54px); display:grid; grid-template-columns:minmax(265px,.68fr) minmax(520px,1.6fr); grid-template-rows:auto 1fr auto; gap:22px 32px; }
-        .brand { grid-column:1/-1; position:relative; z-index:3; }
-        .copy { z-index:3; align-self:start; padding-top:clamp(10px,2vw,24px); }
+        .frame { min-height:660px; border-radius:inherit; padding:clamp(24px,3.7vw,54px); display:grid; grid-template-columns:minmax(265px,.68fr) minmax(520px,1.6fr); grid-template-rows:1fr auto; gap:22px 32px; }
+        .copy { z-index:3; align-self:start; padding-top:clamp(10px,2vw,24px); grid-row:1; }
         h2 { margin:20px 0 12px; font:800 clamp(2.4rem,4.5vw,5rem)/.98 Manrope,Inter,sans-serif; letter-spacing:-.055em; }
         .sub { margin:0 0 22px; color:var(--vy-muted); line-height:1.55; max-width:390px; }
         .cards { display:grid; gap:10px; }
@@ -379,7 +381,7 @@ class VyuhaMarketSignal extends MotionElement {
         .mini-label { color:#bc91ff; font:600 10px/1.2 ui-monospace,monospace; letter-spacing:.09em; text-transform:uppercase; }
         .main-value { font:500 18px/1.3 Manrope,Inter,sans-serif; margin-top:3px; }
         .meta { color:#8f899b;font-size:10px;text-align:right; }
-        .chart-wrap { z-index:3; min-width:0; display:flex; flex-direction:column; gap:12px; }
+        .chart-wrap { z-index:3; min-width:0; display:flex; flex-direction:column; gap:12px; grid-row:1; }
         .chart { position:relative; min-height:0; flex:1; border-radius:18px; padding:14px; }
         .chart-head { display:flex; justify-content:space-between; align-items:center; color:#b7b0c3; font:600 11px/1 ui-monospace,monospace; letter-spacing:.04em; }
         .live { display:flex;align-items:center;gap:6px;color:#d6d1df; }.live i{width:7px;height:7px;border-radius:50%;background:var(--vy-gain);box-shadow:0 0 9px var(--vy-gain);animation:live var(--vy-loop-fast) ease-in-out infinite}
@@ -392,7 +394,7 @@ class VyuhaMarketSignal extends MotionElement {
         .entry-card { filter:drop-shadow(0 0 16px rgba(142,81,255,.4)); }
         .confidence { border-radius:13px; min-height:58px; display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 16px; }
         .confidence svg { width:100%; height:30px; }.confidence path{fill:none;stroke:#aa70ff;stroke-width:1.5;stroke-dasharray:300;animation:micro var(--vy-loop-slow) linear infinite}.confidence strong{color:#af75ff;font:500 28px/1 Manrope,Inter,sans-serif}
-        .ticker { grid-column:1/-1; z-index:4; border-radius:13px; overflow:hidden; white-space:nowrap; }
+        .ticker { grid-column:1/-1; grid-row:2; z-index:4; border-radius:13px; overflow:hidden; white-space:nowrap; }
         .ticker-track { display:flex; width:max-content; animation:ticker var(--vy-loop-ticker) linear infinite; }
         .tick { display:grid; grid-template-columns:auto auto auto; gap:12px; align-items:center; padding:15px 24px; border-right:1px solid rgba(190,160,255,.12); min-width:220px; font-size:13px; }
         .tick b{font-family:ui-monospace,monospace}.tick span{color:#e8e4ed}.tick em{font-style:normal}.gain{color:var(--vy-gain)}.loss{color:var(--vy-loss)}
@@ -402,11 +404,10 @@ class VyuhaMarketSignal extends MotionElement {
         @keyframes live { 50%{opacity:.3;transform:scale(.72)} }
         @keyframes micro { to{stroke-dashoffset:-300} }
         @keyframes ticker { to{transform:translateX(-50%)} }
-        @media(max-width:980px){.frame{aspect-ratio:auto;grid-template-columns:1fr;grid-template-rows:auto auto minmax(440px,1fr) auto}.brand{grid-column:1}.copy{display:grid;grid-template-columns:1fr 1fr;gap:24px}.copy-head{align-self:center}.cards{grid-template-columns:repeat(3,1fr)}.chart-wrap{grid-column:1}.ticker{grid-column:1}.liquid{width:42%;opacity:.55}}
+        @media(max-width:980px){.frame{aspect-ratio:auto;grid-template-columns:1fr;grid-template-rows:auto minmax(440px,1fr) auto}.copy{display:grid;grid-template-columns:1fr 1fr;gap:24px;grid-row:1}.copy-head{align-self:center}.cards{grid-template-columns:repeat(3,1fr)}.chart-wrap{grid-column:1;grid-row:2}.ticker{grid-column:1;grid-row:3}.liquid{width:42%;opacity:.55}}
         @media(max-width:700px){.frame{padding:22px;min-height:auto}.copy{display:block}.cards{grid-template-columns:1fr}.chart-wrap{min-height:480px}.chart{padding:10px}.tick{min-width:190px}.liquid{width:60%;right:-22%}}
       </style>
       <section class="frame" role="img" aria-label="VYUHA market signal and algorithmic execution interface">
-        <div class="brand"><div class="wordmark">${MARK}<span>VYUHA</span></div></div>
         <div class="copy">
           <div class="copy-head"><div class="eyebrow">AI-DRIVEN QUANT ENGINE</div><h2>Market Signal.<br>Algo Execution.</h2><p class="sub">From real-time signal detection to institutional execution. Precision at machine speed.</p></div>
           <div class="cards">

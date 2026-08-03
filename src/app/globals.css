@@ -327,19 +327,25 @@ nav.links a:hover {
 }
 
 /* ============ EMBEDDED MOTION COMPONENTS ============ */
-/* Not in the source file's CSS — added because these are plain unknown
-   elements (zero intrinsic size) until public/js/vyuha-motion.js loads
-   and upgrades them. Without a reserved size here, each one collapses to
-   ~0px then jumps to full height once its Shadow DOM renders — measured
-   via Lighthouse on the production build: CLS 0.905 before this rule,
-   caused almost entirely by these three elements. min-height/aspect-ratio
-   below match each component's own internal `.frame` sizing exactly (see
-   vyuha-motion.js) so the reserved space is the space it'll actually use. */
+/* min-height/aspect-ratio below match each component's own internal
+   `.frame` sizing exactly (see vyuha-motion.js) so the reserved space is
+   the space it'll actually use — these are plain unknown elements (zero
+   intrinsic size) until public/js/vyuha-motion.js loads and upgrades
+   them; without a reserved size here, each one collapses to ~0px then
+   jumps to full height once its Shadow DOM renders (measured via
+   Lighthouse on the production build: CLS 0.905 before this rule,
+   caused almost entirely by these three elements — keep this in sync
+   with vyuha-motion.js or that regresses). Only qworp-engine and
+   vyuha-market-signal get the bordered-card chrome — vyuha-hero is
+   full-bleed, no border/radius, per the source file's host rule split. */
 vyuha-hero,
 qworp-engine,
 vyuha-market-signal {
   display: block;
   width: 100%;
+}
+qworp-engine,
+vyuha-market-signal {
   border-radius: 22px;
   overflow: hidden;
   border: 1px solid var(--line-strong);
@@ -352,8 +358,7 @@ qworp-engine {
   min-height: 470px;
 }
 vyuha-market-signal {
-  aspect-ratio: 8 / 5;
-  min-height: 520px;
+  min-height: 660px;
 }
 
 /* ticker */
